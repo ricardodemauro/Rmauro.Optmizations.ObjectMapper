@@ -19,7 +19,7 @@ public class MapperDynamicCode : MapperBase
         }
 
         var builder = new StringBuilder();
-        builder.AppendLine("using ObjectToObjectMapper;\r\n");
+        builder.AppendLine("using Rmauro.Optimizations.ObjectMappers;\r\n");
         builder.Append("namespace Copy {\r\n");
         builder.Append("    public class ");
         builder.Append(key);
@@ -87,5 +87,25 @@ public class MapperDynamicCode : MapperBase
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
         var args = new[] { source, target };
         _comp[key].InvokeMember("CopyProps", flags, null, null, args);
+    }
+
+    public override TOut CopyIt<TIn, TOut>(TIn source)
+    {
+        var target = new TOut();
+
+        var sourceType = source.GetType();
+        var targetType = target.GetType();
+
+        var key = GetMapKey(sourceType, targetType);
+        if (!_comp.ContainsKey(key))
+        {
+            MapTypes(sourceType, targetType);
+        }
+
+        var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
+        var args = new[] { source, target };
+        _comp[key].InvokeMember("CopyProps", flags, null, null, args);
+
+        return target;
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection.Emit;
 
-namespace Rmauro.Optimizations.ObjectMappers;
+namespace Rmauro.Optimizations.ObjectMappers.Mappers;
 
 public class MapperDynamicILCode : MapperBase
 {
@@ -42,5 +42,20 @@ public class MapperDynamicILCode : MapperBase
         var del = _del[key];
         var args = new[] { source, target };
         del.Invoke(null, args);
+    }
+
+    public override TOut CopyIt<TIn, TOut>(TIn source)
+    {
+        var target = new TOut();
+
+        var sourceType = source.GetType();
+        var targetType = target.GetType();
+        var key = GetMapKey(sourceType, targetType);
+
+        var del = _del[key];
+        var args = new[] { source, target };
+        del.Invoke(null, args);
+
+        return target;
     }
 }

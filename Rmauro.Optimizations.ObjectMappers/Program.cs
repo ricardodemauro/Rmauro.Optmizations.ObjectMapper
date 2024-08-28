@@ -30,7 +30,8 @@ static void TestMappers(object source, object target)
         new MapperUnoptimized(),
         new MapperOptimized(),
         new MapperDynamicCode(),
-        new MapperDynamicILCode()
+        new MapperDynamicILCode(),
+        new MapperManual()
     };
 
     var sourceType = source.GetType();

@@ -21,4 +21,21 @@ public class MapperUnoptimized : MapperBase
             prop.TargetProperty.SetValue(target, sourceValue, null);
         }
     }
+
+    public override TOut CopyIt<TIn, TOut>(TIn source)
+    {
+        var target = new TOut();
+
+        var sourceType = source.GetType();
+        var targetType = target.GetType();
+        var propMap = GetMatchingProperties(sourceType, targetType);
+
+        for (var i = 0; i < propMap.Count; i++)
+        {
+            var prop = propMap[i];
+            var sourceValue = prop.SourceProperty.GetValue(source, null);
+            prop.TargetProperty.SetValue(target, sourceValue, null);
+        }
+        return target;
+    }
 }
