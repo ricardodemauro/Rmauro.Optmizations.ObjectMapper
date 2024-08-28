@@ -46,7 +46,7 @@ public class MapperDynamicCode : MapperBase
         var syntaxTree = CSharpSyntaxTree.ParseText(builder.ToString());
 
         string assemblyName = Path.GetRandomFileName();
-        var refPaths = new[] 
+        var refPaths = new[]
         {
             typeof(System.Object).GetTypeInfo().Assembly.Location,
             typeof(Console).GetTypeInfo().Assembly.Location,
@@ -103,7 +103,7 @@ public class MapperDynamicCode : MapperBase
         }
 
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
-        var args = new[] { source, target };
+        var args = new[] { (object)source, (object)target };
         _comp[key].InvokeMember("CopyProps", flags, null, null, args);
 
         return target;

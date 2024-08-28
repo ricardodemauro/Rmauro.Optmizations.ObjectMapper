@@ -1,13 +1,16 @@
+using System.Runtime.CompilerServices;
+
 namespace Rmauro.Optimizations.ObjectMappers;
 
 public abstract class MapperBase
 {
     public abstract void MapTypes(Type source, Type target);
-    
+
     public abstract void Copy(object source, object target);
 
     public abstract TOut CopyIt<TIn, TOut>(TIn source) where TOut : class, new();
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected virtual IList<PropertyMap> GetMatchingProperties
         (Type sourceType, Type targetType)
     {

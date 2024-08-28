@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Rmauro.Optimizations.ObjectMappers;
 
@@ -20,6 +21,7 @@ public class OrderModel
 
 public static class ObjectExtensions
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IList<PropertyMap> GetMatchingProps(this object source, object target)
     {
         if (source == null) throw new ArgumentNullException(nameof(source));

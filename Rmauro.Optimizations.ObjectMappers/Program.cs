@@ -1,9 +1,12 @@
 ﻿
-using System.Diagnostics;
 using Rmauro.Optimizations.ObjectMappers;
 using Rmauro.Optimizations.ObjectMappers.Mappers;
+using System.Diagnostics;
 
 Console.WriteLine("Hello, World! Testing Different Mappers");
+
+const string DoubleFixedPoint = "0.###################################################################################################################################################################################################################################################################################################################################################";
+
 
 var source = new OrderModel
 {
@@ -15,13 +18,48 @@ var source = new OrderModel
 };
 var target = new OrderModel();
 
-TestMappers(source, target);
+//TestMappers(source, target);
+TestMappersV2(source);
 //TestAutoMapper(source, target);
 
 Console.WriteLine(Environment.NewLine);
 Console.WriteLine("Press any key to exit ...");
 Console.ReadKey();
 
+
+static void TestMappersV2(OrderModel source)
+{
+    var mappers = new MapperBase[]
+    {
+        new MapperUnoptimized(),
+        new MapperOptimized(),
+        new MapperDynamicCode(),
+        new MapperDynamicILCode(),
+        new MapperManual()
+    };
+
+    var sourceType = source.GetType();
+
+    var stopper = new Stopwatch();
+    var testRuns = 1000000;
+
+    foreach (var mapper in mappers)
+    {
+        mapper.MapTypes(sourceType, sourceType);
+
+        stopper.Restart();
+
+        for (var i = 0; i < testRuns; i++)
+        {
+            _ = mapper.CopyIt<OrderModel, OrderModel>(source);
+        }
+
+        stopper.Stop();
+
+        var time = stopper.ElapsedMilliseconds / (double)testRuns;
+        Console.WriteLine(mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
+    }
+}
 
 static void TestMappers(object source, object target)
 {
@@ -53,7 +91,7 @@ static void TestMappers(object source, object target)
         stopper.Stop();
 
         var time = stopper.ElapsedMilliseconds / (double)testRuns;
-        Console.WriteLine(mapper.GetType().Name + ": " + time);
+        Console.WriteLine(mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
     }
 }
 

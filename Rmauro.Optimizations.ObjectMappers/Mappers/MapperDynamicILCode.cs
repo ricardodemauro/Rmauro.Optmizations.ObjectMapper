@@ -53,7 +53,7 @@ public class MapperDynamicILCode : MapperBase
         var key = GetMapKey(sourceType, targetType);
 
         var del = _del[key];
-        var args = new[] { source, target };
+        var args = new[] { (object)source, (object)target };
         del.Invoke(null, args);
 
         return target;

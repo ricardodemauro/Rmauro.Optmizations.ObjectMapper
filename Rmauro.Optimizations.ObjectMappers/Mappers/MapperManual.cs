@@ -27,8 +27,8 @@ public class MapperManual : MapperBase
     {
         var target = new TOut();
 
-        var s = (OrderModel)source;
-        var t = (OrderModel)target;
+        var s = source as OrderModel;
+        var t = target as OrderModel;
 
         t.Id = s.Id;
         t.CustomerName = s.CustomerName;
@@ -36,6 +36,6 @@ public class MapperManual : MapperBase
         t.EstimatedDeliveryDate = s.EstimatedDeliveryDate;
         t.OrderReference = s.OrderReference;
 
-        return t;
+        return t as TOut;
     }
 }
