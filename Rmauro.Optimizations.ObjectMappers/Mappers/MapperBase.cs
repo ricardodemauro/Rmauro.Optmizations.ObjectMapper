@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Rmauro.Optimizations.ObjectMappers;
+namespace Rmauro.Optimizations.ObjectMappers.Mappers;
 
 public abstract class MapperBase
 {
@@ -28,6 +28,7 @@ public abstract class MapperBase
                               SourceProperty = s,
                               TargetProperty = t
                           }).ToList();
+                          
         return properties;
     }
 

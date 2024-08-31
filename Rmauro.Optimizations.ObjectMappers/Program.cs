@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Rmauro.Optimizations.ObjectMappers;
 using Rmauro.Optimizations.ObjectMappers.Mappers;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ Console.WriteLine("Hello, World! Testing Different Mappers");
 const string DoubleFixedPoint = "0.###################################################################################################################################################################################################################################################################################################################################################";
 
 
-var source = new OrderModel
+var source = new RandomModel
 {
     Id = 1,
     CustomerName = "John Doe",
@@ -16,60 +17,26 @@ var source = new OrderModel
     EstimatedDeliveryDate = DateTime.Now,
     OrderReference = "ODF/SDP/1929242111-237821"
 };
-var target = new OrderModel();
+var target = new RandomModel();
 
-//TestMappers(source, target);
-TestMappersV2(source);
-//TestAutoMapper(source, target);
+TestMappers(source, target);
+//TestMappersV2(source);
+TestAutoMapper(source, target);
 
 Console.WriteLine(Environment.NewLine);
 Console.WriteLine("Press any key to exit ...");
 Console.ReadKey();
 
 
-static void TestMappersV2(OrderModel source)
-{
-    var mappers = new MapperBase[]
-    {
-        new MapperUnoptimized(),
-        new MapperOptimized(),
-        new MapperDynamicCode(),
-        new MapperDynamicILCode(),
-        new MapperManual()
-    };
-
-    var sourceType = source.GetType();
-
-    var stopper = new Stopwatch();
-    var testRuns = 1000000;
-
-    foreach (var mapper in mappers)
-    {
-        mapper.MapTypes(sourceType, sourceType);
-
-        stopper.Restart();
-
-        for (var i = 0; i < testRuns; i++)
-        {
-            _ = mapper.CopyIt<OrderModel, OrderModel>(source);
-        }
-
-        stopper.Stop();
-
-        var time = stopper.ElapsedMilliseconds / (double)testRuns;
-        Console.WriteLine(mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
-    }
-}
-
 static void TestMappers(object source, object target)
 {
     var mappers = new MapperBase[]
     {
-        new MapperUnoptimized(),
-        new MapperOptimized(),
+        new MapperReflectionUnoptimized(),
+        new MapperReflectionOptimized(),
         new MapperDynamicCode(),
         new MapperDynamicILCode(),
-        new MapperManual()
+        new MapperManualAssign()
     };
 
     var sourceType = source.GetType();
@@ -95,29 +62,26 @@ static void TestMappers(object source, object target)
     }
 }
 
-// static void TestAutoMapper(OrderModel source, OrderModel target)
-// {
-//     var config = new MapperConfiguration(cfg =>
-//     {
-//         cfg.CreateMap<OrderModel, OrderModel>();
-//     });
+static void TestAutoMapper(RandomModel source, RandomModel target)
+{
+    var config = new MapperConfiguration(cfg => cfg.CreateMap<RandomModel, RandomModel>());
 
-//     var mapper = new Mapper(config);
+    var mapper = config.CreateMapper();
 
-//     mapper.Map(source, target);
+    _ = mapper.Map<RandomModel, RandomModel>(source, target);
 
-//     var stopper = new Stopwatch();
-//     var testRuns = 1000000;
+    var stopper = new Stopwatch();
+    var testRuns = 1000000;
 
-//     stopper.Start();
+    stopper.Start();
 
-//     for (var i = 0; i < testRuns; i++)
-//     {
-//         mapper.Map(source, target);
-//     }
+    for (var i = 0; i < testRuns; i++)
+    {
+        _ = mapper.Map<RandomModel, RandomModel>(source, target);
+    }
 
-//     stopper.Stop();
+    stopper.Stop();
 
-//     var time = stopper.ElapsedMilliseconds / (double)testRuns;
-//     Console.WriteLine("AutoMapper: " + time);
-// }
+    var time = stopper.ElapsedMilliseconds / (double)testRuns;
+    Console.WriteLine("AutoMapper: " + time);
+}

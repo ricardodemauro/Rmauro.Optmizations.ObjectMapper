@@ -1,11 +1,10 @@
-using System;
 using System.Reflection.Emit;
 
 namespace Rmauro.Optimizations.ObjectMappers.Mappers;
 
 public class MapperDynamicILCode : MapperBase
 {
-    private readonly Dictionary<string, DynamicMethod> _del = new Dictionary<string, DynamicMethod>();
+    readonly Dictionary<string, DynamicMethod> _del = new ();
 
     public override void MapTypes(Type source, Type target)
     {

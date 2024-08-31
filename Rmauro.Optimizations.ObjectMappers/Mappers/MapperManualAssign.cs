@@ -2,15 +2,15 @@ using System;
 
 namespace Rmauro.Optimizations.ObjectMappers.Mappers;
 
-public class MapperManual : MapperBase
+public class MapperManualAssign : MapperBase
 {
     public override void MapTypes(Type source, Type target)
     {}
 
     public override void Copy(object source, object target)
     {
-        var s = (OrderModel)source;
-        var t = (OrderModel)target;
+        var s = (RandomModel)source;
+        var t = (RandomModel)target;
 
         t.Id = s.Id;
 
@@ -27,8 +27,8 @@ public class MapperManual : MapperBase
     {
         var target = new TOut();
 
-        var s = source as OrderModel;
-        var t = target as OrderModel;
+        var s = source as RandomModel;
+        var t = target as RandomModel;
 
         t.Id = s.Id;
         t.CustomerName = s.CustomerName;

@@ -2,36 +2,19 @@ using System;
 
 namespace Rmauro.Optimizations.ObjectMappers.Mappers;
 
-public class MapperOptimized : MapperBase
+public class MapperReflectionUnoptimized : MapperBase
 {
-    private readonly Dictionary<string, PropertyMap[]> _maps = new Dictionary<string, PropertyMap[]>();
-
     public override void MapTypes(Type source, Type target)
     {
-        var key = GetMapKey(source, target);
-        if (_maps.ContainsKey(key))
-        {
-            return;
-        }
-
-        var props = GetMatchingProperties(source, target);
-        _maps.Add(key, props.ToArray());
     }
 
     public override void Copy(object source, object target)
     {
         var sourceType = source.GetType();
         var targetType = target.GetType();
+        var propMap = GetMatchingProperties(sourceType, targetType);
 
-        var key = GetMapKey(sourceType, targetType);
-        if (!_maps.ContainsKey(key))
-        {
-            MapTypes(sourceType, targetType);
-        }
-
-        var propMap = _maps[key];
-
-        for (var i = 0; i < propMap.Length; i++)
+        for (var i = 0; i < propMap.Count; i++)
         {
             var prop = propMap[i];
             var sourceValue = prop.SourceProperty.GetValue(source, null);
@@ -45,16 +28,9 @@ public class MapperOptimized : MapperBase
 
         var sourceType = source.GetType();
         var targetType = target.GetType();
+        var propMap = GetMatchingProperties(sourceType, targetType);
 
-        var key = GetMapKey(sourceType, targetType);
-        if (!_maps.ContainsKey(key))
-        {
-            MapTypes(sourceType, targetType);
-        }
-
-        var propMap = _maps[key];
-
-        for (var i = 0; i < propMap.Length; i++)
+        for (var i = 0; i < propMap.Count; i++)
         {
             var prop = propMap[i];
             var sourceValue = prop.SourceProperty.GetValue(source, null);

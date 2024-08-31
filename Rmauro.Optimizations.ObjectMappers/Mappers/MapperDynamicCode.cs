@@ -19,29 +19,28 @@ public class MapperDynamicCode : MapperBase
         }
 
         var builder = new StringBuilder();
-        builder.AppendLine("using Rmauro.Optimizations.ObjectMappers;\r\n");
-        builder.Append("namespace Copy {\r\n");
-        builder.Append("    public class ");
-        builder.Append(key);
-        builder.Append(" {\r\n");
-        builder.Append("        public static void CopyProps(");
-        builder.Append(target.FullName.Replace("+", "."));
-        builder.Append(" source, ");
-        builder.Append(target.FullName.Replace("+", "."));
-        builder.Append(" target) {\r\n");
+        builder.Append($@"
+        
+        namespace Copy 
+        {{
+            public class {key}
+            {{
+                public static void CopyProps(
+                    {target.FullName.Replace("+", ".")} source, 
+                    {target.FullName.Replace("+", ".")} target)
+                {{
+        ");
 
         var map = GetMatchingProperties(source, target);
         foreach (var item in map)
         {
-            builder.Append("            target.");
-            builder.Append(item.TargetProperty.Name);
-            builder.Append(" = ");
-            builder.Append("source.");
-            builder.Append(item.SourceProperty.Name);
-            builder.Append(";\r\n");
+            builder.AppendLine($@"target.{item.TargetProperty.Name} = source.{item.SourceProperty.Name};");
         }
 
-        builder.Append("        }\r\n   }\r\n}");
+        builder.Append($@"
+                }}
+            }}
+        }}");
 
         var syntaxTree = CSharpSyntaxTree.ParseText(builder.ToString());
 
@@ -70,7 +69,6 @@ public class MapperDynamicCode : MapperBase
         Assembly assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
         var type = assembly.GetType("Copy." + key);
         _comp.Add(key, type);
-
     }
 
     public override void Copy(object source, object target)

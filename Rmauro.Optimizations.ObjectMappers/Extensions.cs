@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -6,7 +5,7 @@ namespace Rmauro.Optimizations.ObjectMappers;
 
 public record struct PropertyMap(PropertyInfo SourceProperty, PropertyInfo TargetProperty);
 
-public class OrderModel
+public class RandomModel
 {
     public int Id { get; set; }
 
@@ -24,8 +23,8 @@ public static class ObjectExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IList<PropertyMap> GetMatchingProps(this object source, object target)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        if (target == null) throw new ArgumentNullException(nameof(target));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(target);
 
         var sourceProperties = source.GetType().GetProperties();
         var targetProperties = target.GetType().GetProperties();
@@ -39,12 +38,9 @@ public static class ObjectExtensions
                               t.PropertyType.IsPublic &&
                               s.PropertyType == t.PropertyType &&
                               (
-                                  (s.PropertyType.IsValueType &&
-                                  t.PropertyType.IsValueType
-                                  ) ||
-                                  (s.PropertyType == typeof(string) &&
-                                  t.PropertyType == typeof(string)
-                                  )
+                                  (s.PropertyType.IsValueType && t.PropertyType.IsValueType) 
+                                  || 
+                                  (s.PropertyType == typeof(string) && t.PropertyType == typeof(string))
                               )
                           select new PropertyMap
                           {
