@@ -71,7 +71,7 @@ public class MapperDynamicCode : MapperBase
         _comp.Add(key, type);
     }
 
-    public override void Copy(object source, object target)
+    public override void Copy(ref object source, ref object target)
     {
         var sourceType = source.GetType();
         var targetType = target.GetType();
@@ -85,25 +85,5 @@ public class MapperDynamicCode : MapperBase
         var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
         var args = new[] { source, target };
         _comp[key].InvokeMember("CopyProps", flags, null, null, args);
-    }
-
-    public override TOut CopyIt<TIn, TOut>(TIn source)
-    {
-        var target = new TOut();
-
-        var sourceType = source.GetType();
-        var targetType = target.GetType();
-
-        var key = GetMapKey(sourceType, targetType);
-        if (!_comp.ContainsKey(key))
-        {
-            MapTypes(sourceType, targetType);
-        }
-
-        var flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod;
-        var args = new[] { (object)source, (object)target };
-        _comp[key].InvokeMember("CopyProps", flags, null, null, args);
-
-        return target;
     }
 }

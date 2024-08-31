@@ -1,13 +1,11 @@
-using System;
-
 namespace Rmauro.Optimizations.ObjectMappers.Mappers;
 
-public class MapperManualAssign : MapperBase
+public class MapperManualAssign : MapperBase, ITypedCopy
 {
     public override void MapTypes(Type source, Type target)
     {}
 
-    public override void Copy(object source, object target)
+    public override void Copy(ref object source, ref object target)
     {
         var s = (RandomModel)source;
         var t = (RandomModel)target;
@@ -23,19 +21,16 @@ public class MapperManualAssign : MapperBase
         t.OrderReference = s.OrderReference;
     }
 
-    public override TOut CopyIt<TIn, TOut>(TIn source)
+    public void Copy(ref RandomModel source, ref RandomModel target)
     {
-        var target = new TOut();
+        target.Id = source.Id;
 
-        var s = source as RandomModel;
-        var t = target as RandomModel;
+        target.CustomerName = source.CustomerName;
 
-        t.Id = s.Id;
-        t.CustomerName = s.CustomerName;
-        t.DeliveryAddress = s.DeliveryAddress;
-        t.EstimatedDeliveryDate = s.EstimatedDeliveryDate;
-        t.OrderReference = s.OrderReference;
+        target.DeliveryAddress = source.DeliveryAddress;
 
-        return t as TOut;
+        target.EstimatedDeliveryDate = source.EstimatedDeliveryDate;
+
+        target.OrderReference = source.OrderReference;
     }
 }

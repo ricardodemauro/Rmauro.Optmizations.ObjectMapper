@@ -1,10 +1,11 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using Rmauro.Optimizations.ObjectMappers.Generators;
 
 namespace Rmauro.Optimizations.ObjectMappers;
 
 public record struct PropertyMap(PropertyInfo SourceProperty, PropertyInfo TargetProperty);
 
+[MapperGenerator]
 public class RandomModel
 {
     public int Id { get; set; }
@@ -20,7 +21,7 @@ public class RandomModel
 
 public static class ObjectExtensions
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public static IList<PropertyMap> GetMatchingProps(this object source, object target)
     {
         ArgumentNullException.ThrowIfNull(source);

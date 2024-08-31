@@ -32,7 +32,7 @@ public class MapperDynamicILCode : MapperBase
         _del.Add(key, dm);
     }
 
-    public override void Copy(object source, object target)
+    public override void Copy(ref object source, ref object target)
     {
         var sourceType = source.GetType();
         var targetType = target.GetType();
@@ -41,20 +41,5 @@ public class MapperDynamicILCode : MapperBase
         var del = _del[key];
         var args = new[] { source, target };
         del.Invoke(null, args);
-    }
-
-    public override TOut CopyIt<TIn, TOut>(TIn source)
-    {
-        var target = new TOut();
-
-        var sourceType = source.GetType();
-        var targetType = target.GetType();
-        var key = GetMapKey(sourceType, targetType);
-
-        var del = _del[key];
-        var args = new[] { (object)source, (object)target };
-        del.Invoke(null, args);
-
-        return target;
     }
 }

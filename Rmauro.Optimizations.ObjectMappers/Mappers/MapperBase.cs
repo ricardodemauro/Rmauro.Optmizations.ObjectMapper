@@ -6,9 +6,7 @@ public abstract class MapperBase
 {
     public abstract void MapTypes(Type source, Type target);
 
-    public abstract void Copy(object source, object target);
-
-    public abstract TOut CopyIt<TIn, TOut>(TIn source) where TOut : class, new();
+    public abstract void Copy(ref object source, ref object target);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected virtual IList<PropertyMap> GetMatchingProperties

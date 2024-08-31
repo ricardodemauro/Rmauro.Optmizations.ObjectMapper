@@ -22,6 +22,7 @@ var target = new RandomModel();
 TestMappers(source, target);
 //TestMappersV2(source);
 TestAutoMapper(source, target);
+TestTypedCopy(source, target);
 
 Console.WriteLine(Environment.NewLine);
 Console.WriteLine("Press any key to exit ...");
@@ -36,7 +37,8 @@ static void TestMappers(object source, object target)
         new MapperReflectionOptimized(),
         new MapperDynamicCode(),
         new MapperDynamicILCode(),
-        new MapperManualAssign()
+        new MapperManualAssign(),
+        new MapperDynamicGeneratedCode()
     };
 
     var sourceType = source.GetType();
@@ -52,13 +54,42 @@ static void TestMappers(object source, object target)
 
         for (var i = 0; i < testRuns; i++)
         {
-            mapper.Copy(source, target);
+            mapper.Copy(ref source, ref target);
         }
 
         stopper.Stop();
 
         var time = stopper.ElapsedMilliseconds / (double)testRuns;
         Console.WriteLine(mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
+    }
+}
+
+static void TestTypedCopy(RandomModel source, RandomModel target)
+{
+    var mappers = new ITypedCopy[]
+    {
+        new MapperManualAssign(),
+        new MapperDynamicGeneratedCode()
+    };
+
+    var sourceType = source.GetType();
+    var targetType = target.GetType();
+    var stopper = new Stopwatch();
+    var testRuns = 1000000;
+
+    foreach (var mapper in mappers)
+    {
+        stopper.Restart();
+
+        for (var i = 0; i < testRuns; i++)
+        {
+            mapper.Copy(ref source, ref target);
+        }
+
+        stopper.Stop();
+
+        var time = stopper.ElapsedMilliseconds / (double)testRuns;
+        Console.WriteLine("Typed: " + mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
     }
 }
 
