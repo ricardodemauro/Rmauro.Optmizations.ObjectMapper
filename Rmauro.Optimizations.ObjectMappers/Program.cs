@@ -8,6 +8,7 @@ Console.WriteLine("Hello, World! Testing Different Mappers");
 
 const string DoubleFixedPoint = "0.###################################################################################################################################################################################################################################################################################################################################################";
 
+int rounds = 1_000_000;
 
 var source = new RandomModel
 {
@@ -19,17 +20,15 @@ var source = new RandomModel
 };
 var target = new RandomModel();
 
-TestMappers(source, target);
-//TestMappersV2(source);
-TestAutoMapper(source, target);
 TestTypedCopy(source, target);
+TestMappers(source, target);
+TestAutoMapper(source, target);
 
 Console.WriteLine(Environment.NewLine);
 Console.WriteLine("Press any key to exit ...");
-Console.ReadKey();
 
 
-static void TestMappers(object source, object target)
+void TestMappers(object source, object target)
 {
     var mappers = new MapperBase[]
     {
@@ -44,7 +43,6 @@ static void TestMappers(object source, object target)
     var sourceType = source.GetType();
     var targetType = target.GetType();
     var stopper = new Stopwatch();
-    var testRuns = 1000000;
 
     foreach (var mapper in mappers)
     {
@@ -52,19 +50,19 @@ static void TestMappers(object source, object target)
 
         stopper.Restart();
 
-        for (var i = 0; i < testRuns; i++)
+        for (var i = 0; i < rounds; i++)
         {
             mapper.Copy(ref source, ref target);
         }
 
         stopper.Stop();
 
-        var time = stopper.ElapsedMilliseconds / (double)testRuns;
+        var time = stopper.ElapsedMilliseconds / (double)rounds;
         Console.WriteLine(mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
     }
 }
 
-static void TestTypedCopy(RandomModel source, RandomModel target)
+void TestTypedCopy(RandomModel source, RandomModel target)
 {
     var mappers = new ITypedCopy[]
     {
@@ -75,25 +73,24 @@ static void TestTypedCopy(RandomModel source, RandomModel target)
     var sourceType = source.GetType();
     var targetType = target.GetType();
     var stopper = new Stopwatch();
-    var testRuns = 1000000;
 
     foreach (var mapper in mappers)
     {
         stopper.Restart();
 
-        for (var i = 0; i < testRuns; i++)
+        for (var i = 0; i < rounds; i++)
         {
             mapper.Copy(ref source, ref target);
         }
 
         stopper.Stop();
 
-        var time = stopper.ElapsedMilliseconds / (double)testRuns;
+        var time = stopper.ElapsedMilliseconds / (double)rounds;
         Console.WriteLine("Typed: " + mapper.GetType().Name + ": " + time.ToString(DoubleFixedPoint));
     }
 }
 
-static void TestAutoMapper(RandomModel source, RandomModel target)
+void TestAutoMapper(RandomModel source, RandomModel target)
 {
     var config = new MapperConfiguration(cfg => cfg.CreateMap<RandomModel, RandomModel>());
 
@@ -102,17 +99,16 @@ static void TestAutoMapper(RandomModel source, RandomModel target)
     _ = mapper.Map<RandomModel, RandomModel>(source, target);
 
     var stopper = new Stopwatch();
-    var testRuns = 1000000;
 
     stopper.Start();
 
-    for (var i = 0; i < testRuns; i++)
+    for (var i = 0; i < rounds; i++)
     {
         _ = mapper.Map<RandomModel, RandomModel>(source, target);
     }
 
     stopper.Stop();
 
-    var time = stopper.ElapsedMilliseconds / (double)testRuns;
-    Console.WriteLine("AutoMapper: " + time);
+    var time = stopper.ElapsedMilliseconds / (double)rounds;
+    Console.WriteLine("AutoMapper: " + time.ToString(DoubleFixedPoint));
 }

@@ -15,6 +15,7 @@ public class MapperDynamicGeneratedCode : MapperBase, ITypedCopy
         
     }
 
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public void Copy(ref RandomModel source, ref RandomModel target)
     {
         MapRandomModel.Map(ref source, ref target);
