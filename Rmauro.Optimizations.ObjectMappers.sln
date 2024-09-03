@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rmauro.Optimizations.Object
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rmauro.Optimizations.ObjectMappers.Generators.Sample", "Rmauro.Optimizations.ObjectMappers.Generators.Sample\Rmauro.Optimizations.ObjectMappers.Generators.Sample.csproj", "{865F0C04-5858-4CE4-B12B-A3E241CC5D67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rmauro.Optimizations.ObjectMappers.Benchmark", "Rmauro.Optimizations.ObjectMappers.Benchmark\Rmauro.Optimizations.ObjectMappers.Benchmark.csproj", "{6CEDE9C0-976F-4163-859A-2831B392FB39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{865F0C04-5858-4CE4-B12B-A3E241CC5D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{865F0C04-5858-4CE4-B12B-A3E241CC5D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{865F0C04-5858-4CE4-B12B-A3E241CC5D67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CEDE9C0-976F-4163-859A-2831B392FB39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CEDE9C0-976F-4163-859A-2831B392FB39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CEDE9C0-976F-4163-859A-2831B392FB39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CEDE9C0-976F-4163-859A-2831B392FB39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

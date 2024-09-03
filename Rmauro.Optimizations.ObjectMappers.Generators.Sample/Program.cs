@@ -12,6 +12,7 @@ var source = new SampleModel() { Id = 20, Name = "Hello World" };
 
 var target = new SampleModel();
 
-MapSampleModel.Map(ref source, ref target);
+//MapSampleModel.Map(ref source, ref target);
+MapSampleModel.MapTo(source, target);
 
 Console.WriteLine("Id {0} Name {1}", target.Id, target.Name);
